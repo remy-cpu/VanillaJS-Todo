@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="todo.css">
+ 
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li>回收站</li>
+      <li>详情</li>
+      <li>排序</li>
+      <li>注册</li>
+      <li>登录</li>
+   
+    </ul>
+  </nav>
+  <div class="wrapper">
+    <div class="todo">
+      <div class="header">
+        <h1>todos</h1>
+        <input class="input" type="text" placeholder="What needs to be done?">
+      </div>
+      <div class="main">
+        <input class="selectAll" type="checkbox" id="selectAll">
+        <label for="selectAll" id="labelAll">Mark all as complete</label>
+        <ul class="list"></ul>
+        <ul class="list2"></ul>
+      </div>
+      <div class="footer">
+        <ul class="btns_box">
+          <li class="selected all">All</li>
+          <li class="active">Active</li>
+          <li class="completed">Completed</li>
+          <li class="deleted">deleted</li>
+        </ul>
+        <span class="active_count">items</span>
+        <button class="clear_completed">Clear completed</button>
+      </div>
+    </div>
+    <div class="info">
+      <p>Double-click to edit a todo</p>
+      <p>Created by <a href="http://twitter.com/oscargodson">Oscar Godson</a></p>
+      <p>Refactored by <a href="https://github.com/cburgmer">Christoph Burgmer</a></p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </div>
+  </div>
+  <script src="todo.js"></script>
+</body>
+
+</html>
