@@ -96,6 +96,23 @@ window.addEventListener('load', function () {
           users[cnt].todos.splice(index, 0, obj);
           saveData(users);
           load();
+          var flag = true;
+          var selects = document.querySelectorAll(".list_li .select");
+          var selectAll = document.querySelector("#selectAll");
+          if (selects.length == 0) {
+            return false;
+          }
+          for (let i = 0, len = selects.length; i < len; i++) {
+            if (!selects[i].checked) {
+              flag = false;
+              selectAll.checked = false;
+            }
+          }
+          if (flag == true) {
+            selectAll.checked = true;
+          } else {
+            selectAll.checked = false;
+          }
           //每次都先把新的li添加到本地存储，再连同之前的小li一起渲染到页面上
           input.value = '';
         }
@@ -110,8 +127,9 @@ window.addEventListener('load', function () {
       //遍历之前先要清空ul里的元素内容
       list.innerHTML = "";
       var todoCount = users[cnt].todos.length;
+      var selectAll = document.querySelector("#selectAll");
       //遍历数据 i是索引,n是元素
-      for (var i = 0, len = users[cnt].todos.length; i < len; i++) {
+      for (let i = 0, len = users[cnt].todos.length; i < len; i++) {
         var li = document.createElement('li');
         var lihtml = ''
           + ' <input type="checkbox" class="select"></input>'
@@ -145,6 +163,7 @@ window.addEventListener('load', function () {
           words.classList.remove("strickout");
           words.style.color = '#737373';
           select.checked = false;
+
         }
         if (users[cnt].todos[i].priority == 2) {
           mark.innerText = senior.innerText;
@@ -153,6 +172,9 @@ window.addEventListener('load', function () {
           mark.innerText = junior.innerText;
           mark.classList.add("junior");
         }
+      }
+      if (users[cnt].todos.length == 0) {
+        selectAll.checked = false;
       }
       saveData(users);
       showBox();
@@ -260,15 +282,13 @@ window.addEventListener('load', function () {
           saveDeleted(deletedArr);
           saveData(users);
           load();
-        } else if (target.classList.contains("select")) {
-          var users = getData();
-          var del = item.querySelector(".delete");
-          index = del.getAttribute("id");
-          users[cnt].todos[index].completed = !users[cnt].todos[index].completed;
           //全部都为true，则让全选按钮为true
           var flag = true;
           var selects = document.querySelectorAll(".list_li .select");
           var selectAll = document.querySelector("#selectAll");
+          if (selects.length == 0) {
+            return false;
+          }
           for (let i = 0, len = selects.length; i < len; i++) {
             if (!selects[i].checked) {
               flag = false;
@@ -277,12 +297,42 @@ window.addEventListener('load', function () {
           }
           if (flag == true) {
             selectAll.checked = true;
+          } else {
+            selectAll.checked = false;
           }
+        } else if (target.classList.contains("select")) {
+          var users = getData();
+          var del = item.querySelector(".delete");
+          index = del.getAttribute("id");
+          users[cnt].todos[index].completed = !users[cnt].todos[index].completed;
           saveData(users);
           load();
+          //全部都为true，则让全选按钮为true
+          var flag = true;
+          var selects = document.querySelectorAll(".list_li .select");
+          var selectAll = document.querySelector("#selectAll");
+          if (selects.length == 0) {
+            return false;
+          }
+          for (let i = 0, len = selects.length; i < len; i++) {
+            if (!selects[i].checked) {
+              flag = false;
+              selectAll.checked = false;
+            }
+          }
+          if (flag == true) {
+            selectAll.checked = true;
+          } else {
+            selectAll.checked = false;
+          }
+
         }
       })
     }
+
+    //问题：如果selectall是选中状态，退出登陆后仍为选中状态；
+    //因为之前设置selectall状态都是根据页面上的select和数组里的completed；
+    //退出登陆后这些数据还在
 
     //clear_completed的功能
     clearItem();
@@ -290,7 +340,7 @@ window.addEventListener('load', function () {
       var clearCompleted = document.querySelector(".clear_completed");
       var labelAll = document.querySelector("#labelAll");
       var selectAll = document.querySelector("#selectAll");
-      labelAll.onclick = function () {
+      labelAll.addEventListener("click", function () {
         onlineUser = JSON.parse(window.localStorage.getItem('onlineUser'));
         if (onlineUser == null) {
           return false;
@@ -303,7 +353,7 @@ window.addEventListener('load', function () {
         }
         saveData(users);
         load();
-      }
+      })
 
       clearCompleted.addEventListener("click", function () {
         var users = getData();
@@ -482,14 +532,32 @@ window.addEventListener('load', function () {
           var which = dels[num].done.splice(index, 1);
           users[cnt].todos.splice(temp, 0, which[0]);
           //users[cnt].todos = users[cnt].todos.concat(which);
+
           saveData(users);
           load();
+          var flag = true;
+          var selects = document.querySelectorAll(".list_li .select");
+          var selectAll = document.querySelector("#selectAll");
+          if (selects.length == 0) {
+            return false;
+          }
+          for (let i = 0, len = selects.length; i < len; i++) {
+            if (!selects[i].checked) {
+              flag = false;
+              selectAll.checked = false;
+            }
+          }
+          if (flag == true) {
+            selectAll.checked = true;
+          } else {
+            selectAll.checked = false;
+          }
           saveDeleted(dels);
           showdels();
         }
       })
     }
-    
+
     function showdels() {
       var dels = getDeleted();
       num = Match(dels);
@@ -560,6 +628,10 @@ window.addEventListener('load', function () {
       person.innerText = "未登录";
       var list = document.querySelector('.list');
       list.innerHTML = '';
+      var selectAll = document.querySelector("#selectAll");
+      if (list.innerHTML == '') {
+        selectAll.checked = false;
+      }
       e.stopPropagation();
     }
     back.onclick = function () {
@@ -644,6 +716,16 @@ window.addEventListener('load', function () {
           register.style.display = 'none';
           clearbox();
           load();
+          var num = 0;
+          var selects = document.querySelectorAll(".select");
+          for (var i = 0; i < selects.length; i++) {
+            if (selects[i].checked == true) {
+              num++;
+            }
+          }
+          if (num == selects.length && num != 0) {
+            selectAll.checked = true;
+          }
         } else {
           showTips('密码错误 !');
         }
